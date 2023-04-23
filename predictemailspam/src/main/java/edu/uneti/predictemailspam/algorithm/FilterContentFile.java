@@ -97,7 +97,6 @@ public class FilterContentFile {
             Set<String> bagOfWord = toBagOfWord(fileData);
             listBagOfSpam.add(bagOfWord);
         }
-
         // Đọc tất cả các file thư thường (non-spam), chuyển thành danh sách các
         // túi từ
         File folderNonSpam = new File("src/main/resources/static/nonspam");
@@ -108,7 +107,6 @@ public class FilterContentFile {
             Set<String> bagOfWord = toBagOfWord(fileData);
             listBagOfNonSpam.add(bagOfWord);
         }
-
         File file = new java.io.File("src/main/resources/static/result-training/result_training.dat");
         file.getParentFile().mkdirs(); // correct!
         if (!file.exists()) {
