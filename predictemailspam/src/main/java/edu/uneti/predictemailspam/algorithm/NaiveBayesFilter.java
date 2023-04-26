@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class FilterContentFile {
+public class NaiveBayesFilter {
     // mảng chứa các túi từ của thư thường (non-spam)
     static ArrayList<Set<String>> listBagOfNonSpam = new ArrayList<>();
     // mảng chứa các túi từ của thư rác (spam)

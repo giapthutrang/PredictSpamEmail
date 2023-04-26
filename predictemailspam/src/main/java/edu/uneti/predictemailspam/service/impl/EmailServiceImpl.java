@@ -1,7 +1,8 @@
 package edu.uneti.predictemailspam.service.impl;
 
-import edu.uneti.predictemailspam.algorithm.FilterContentFile;
+import edu.uneti.predictemailspam.algorithm.NaiveBayesFilter;
 import edu.uneti.predictemailspam.algorithm.KNNFilter;
+import edu.uneti.predictemailspam.algorithm.NaiveBayesFilter;
 import edu.uneti.predictemailspam.model.entity.Email;
 import edu.uneti.predictemailspam.repository.EmailRepository;
 import edu.uneti.predictemailspam.service.EmailService;
@@ -25,7 +26,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public Email addEmail(Email email) throws IOException, ClassNotFoundException {
         //Check noi dung email va them co danh dau 1 email spam
-        FilterContentFile fcf = new FilterContentFile();
+        NaiveBayesFilter fcf = new NaiveBayesFilter();
         KNNFilter knn = new KNNFilter("src/main/resources/static/train/TrainingData.txt");
         boolean isSpam = false;
         if("knn".equals(algorithm)){
