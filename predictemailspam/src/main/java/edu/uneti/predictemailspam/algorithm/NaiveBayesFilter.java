@@ -4,9 +4,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 public class NaiveBayesFilter {
     // mảng chứa các túi từ của thư thường (non-spam)
@@ -84,31 +82,21 @@ public class NaiveBayesFilter {
         out.writeObject(listBagOfSpam);
         out.writeObject(listBagOfNonSpam);
         out.close();
+        // Trả về kết quả của việc dự doán email
         return C_NB1 < C_NB2;
     }
 
     private void training() throws IOException {
         // Đọc tất cả các file thư rác (spam), chuyển thành danh sách các túi từ
         File folderSpam = new File("src/main/resources/static/spam");
-        ArrayList<Set<String>> listBagOfSpam = new ArrayList<>();
-        File[] spams = folderSpam.listFiles();
-        for (File file : spams) {
-            String fileData = FileUtils.readFileToString(file, "UTF-16");
-            Set<String> bagOfWord = toBagOfWord(fileData);
-            listBagOfSpam.add(bagOfWord);
-        }
+        ArrayList<Set<String>> listBagOfSpam = addDataToBag(folderSpam);
         // Đọc tất cả các file thư thường (non-spam), chuyển thành danh sách các
         // túi từ
         File folderNonSpam = new File("src/main/resources/static/nonspam");
-        ArrayList<Set<String>> listBagOfNonSpam = new ArrayList<>();
-        File[] nonSpams = folderNonSpam.listFiles();
-        for (File file : nonSpams) {
-            String fileData = FileUtils.readFileToString(file, "UTF-16");
-            Set<String> bagOfWord = toBagOfWord(fileData);
-            listBagOfNonSpam.add(bagOfWord);
-        }
+        ArrayList<Set<String>> listBagOfNonSpam = addDataToBag(folderNonSpam);
         File file = new java.io.File("src/main/resources/static/result-training/result_training.dat");
         file.getParentFile().mkdirs(); // correct!
+        //Check nếu file chưa được tạo, thì tạo file mới
         if (!file.exists()) {
             file.createNewFile();
         }
@@ -120,14 +108,24 @@ public class NaiveBayesFilter {
         System.out.println("Hoàn thành huấn luyện");
     }
 
-    public static Set<String> toBagOfWord(String s) {
-        HashSet<String> bag = new HashSet<>();
-        // tách các từ phân cách bởi các dấu ,.!*"'()
-        StringTokenizer s1 = new StringTokenizer(s, " ,.!*\"\'()");
-        while (s1.hasMoreTokens()) {
-            bag.add(s1.nextToken());
+    /**
+     * Xử lý và lưu trữ các nội dung từ các file spam
+     * @param folderSpam
+     * @return ArrayList<Set<String>>
+     */
+    private ArrayList<Set<String>> addDataToBag(File folderSpam) throws IOException {
+        //Tạo biến listBag để lưu lại bộ từ
+        ArrayList<Set<String>> listBag = new ArrayList<>();
+        //Duyệt qua từng file trong thư mục spam or non-spam
+        File[] spams = folderSpam.listFiles();
+        for (File file : spams) {
+            String fileData = FileUtils.readFileToString(file, "UTF-16");
+            Set<String> bagOfWord = TrainingData.toBagOfWord(fileData);
+            //thêm bộ từ của từng file vào trong listBag chứa danh sách các từ của tất cả các file trong thư mục(spam or non-spam)
+            listBag.add(bagOfWord);
         }
-        return bag;
+        //Trả về bộ từ không trùng lặp từ trong file ở thư mục(spam or non-spam)
+        return listBag;
     }
 
 }

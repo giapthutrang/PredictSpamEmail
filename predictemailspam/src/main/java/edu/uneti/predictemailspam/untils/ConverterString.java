@@ -7,6 +7,7 @@ public class ConverterString {
         return input == null ? null : Normalizer.normalize(input, Normalizer.Form.NFKD);
     }
 
+    // Loại bỏ các dấu tiếng Việt
     public static String deAccent(String content) {
         return normalize(content).replaceAll("\\p{M}", "");
     }
